@@ -17,7 +17,14 @@ namespace DTLib
 
 void Exception::init(const char* message, const char* file, int line)
 {
-    m_message = strdup(message);
+    if(message != NULL)
+    {
+        m_message = strdup(message);
+    }
+    else
+    {
+        m_message = NULL;
+    }
 
     if(file != NULL)
     {
@@ -27,9 +34,12 @@ void Exception::init(const char* message, const char* file, int line)
         snprintf(sl, sizeof(sl), "%d", line);
 
         m_location = static_cast<char*>(malloc(strlen(file) + strlen(sl) + 2));
-        m_location = strcpy(m_location, file);
-        m_location = strcat(m_location, ":");
-        m_location = strcat(m_location, sl);
+        if(m_location != NULL)
+        {
+            m_location = strcpy(m_location, file);
+            m_location = strcat(m_location, ":");
+            m_location = strcat(m_location, sl);
+        }
     }
     else
     {
@@ -54,19 +64,25 @@ Exception::Exception(const char* message, const char* file, int line)
 
 Exception::Exception(const Exception& e)
 {
-    m_message = strdup(e.m_message);
-    m_location = strdup(e.m_location);
+    if(e.m_message != NULL)
+        m_message = strdup(e.m_message);
+    if(e.m_location != NULL)
+        m_location = strdup(e.m_location);
 }
 
 Exception& Exception::operator = (const Exception& e)
 {
     if( this != &e)
     {
-        free(m_message);
-        free(m_location);
+        if(m_message != NULL)
+            free(m_message);
+        if(m_location != NULL)
+            free(m_location);
 
-        m_message = strdup(e.m_message);
-        m_location = strdup(e.m_location);
+        if(e.m_message != NULL)
+            m_message = strdup(e.m_message);
+        if(e.m_location != NULL)
+            m_location = strdup(e.m_location);
     }
 
     return *this;
@@ -84,10 +100,11 @@ const char* Exception::location() const
 
 Exception::~Exception()
 {
-    free(m_message);
-    free(m_location);
+    if(m_message != NULL)
+        free(m_message);
+    if(m_location != NULL)
+        free(m_location);
 }
 
 }
-
 
