@@ -35,6 +35,12 @@ public:
 
 		return ret;
 	}
+	
+	// 默认插入到末尾
+	bool insert(const T& e)
+	{
+		return insert(m_length, e);
+	}
 
 	bool remove(int i)
 	{

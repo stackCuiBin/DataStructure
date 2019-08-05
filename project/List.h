@@ -9,7 +9,11 @@ namespace DTLib
 template < typename T >
 class List : public Object
 {
+protected:
+	List(const List& e);
+	List& operator=(const List& e);
 public:
+	List() {};
 	virtual bool insert(int i, const T& e) = 0;
 	virtual bool remove(int i) = 0;
 	virtual bool set(int i, const T& e) = 0;
