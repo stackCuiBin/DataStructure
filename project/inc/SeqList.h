@@ -48,7 +48,7 @@ public:
 
 		if(ret)
 		{
-			for(int p=i; p<m_length; p++)
+			for(int p=i; p<m_length-1; p++)
 			{
 				m_array[p] = m_array[p+1];
 			}

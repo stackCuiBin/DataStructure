@@ -25,7 +25,7 @@ public:
 		}
 		else
 		{
-			//THROW_EXCEPTION(NoEnoughMemoryException, "No memory to create DynamicList");
+			THROW_EXCEPTION(NoEnoughMemoryException, "No memory to create DynamicList");
 		}
 	}
 
@@ -50,6 +50,7 @@ public:
 				}
 
 				T* temp = this->m_array;
+
 				this->m_array = array;
 				this->m_length = length;
 				this->m_capacity = capacity;
@@ -58,7 +59,7 @@ public:
 			}
 			else
 			{
-				// THROW_EXCEPTION(NoEnougnMemoryException, "No memory to resize DynamicList");
+				THROW_EXCEPTION(NoEnoughMemoryException, "No memory to resize DynamicList");
 			}
 		}
 	}
