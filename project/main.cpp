@@ -11,6 +11,8 @@
 #include "StaticList.h"
 #include "DynamicList.h"
 #include "StaticArray.h"
+#include "DynamicArray.h"
+#include "LinkList.h"
 
 using namespace std;
 using namespace DTLib;
@@ -19,7 +21,9 @@ using namespace DTLib;
 // #define Exception_TEST    1
 // #define StaticList_TEST   1
 // #define DynamicList_TEST  1
-#define StaticArray_TEST  1
+// #define StaticArray_TEST  1
+// #define DynamicArray_TEST 1
+#define LinkList_TEST     1
 
 int main(int argc, const char* argv[])
 {
@@ -113,5 +117,46 @@ int main(int argc, const char* argv[])
 	}
 #endif
 
+#ifdef DynamicArray_TEST
+	DynamicArray<int> da(5);
+
+	for(int i = 0; i < da.length(); i++)
+	{
+		da[i] = i*i;
+	}
+	for(int i = 0; i < da.length(); i++)
+	{
+		cout << da[i] << endl;
+	}
+
+	DynamicArray<int> da2(4);
+	da2 = da;
+	for(int i = 0; i < da2.length(); i++)
+	{
+		cout << da2[i] << endl;
+	}
+	da2.resize(3);
+	for(int i = 0; i < da2.length(); i++)
+	{
+		cout << da2[i] << endl;
+	}
+#endif
+
+#ifdef LinkList_TEST
+	LinkList<int> ll;
+	for(int i = 0; i < 5; i++)
+	{
+		ll.insert(i, i);
+	}
+	for(int i = 0; i < ll.length(); i++)
+	{
+		cout << ll.get(i) << endl;
+	}
+	ll.remove(2);
+	for(int i = 0; i < ll.length(); i++)
+	{
+		cout << ll.get(i) << endl;
+	}
+#endif
     return 0;
 }

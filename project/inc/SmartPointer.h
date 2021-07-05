@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: V0.01
+ * @Author: Cuibb
+ * @Date: 2019-07-30 01:00:26
+ * @LastEditors: Cuibb
+ * @LastEditTime: 2021-07-06 00:48:44
+ */
 #ifndef SMARTPOINTER_H
 #define SMARTPOINTER_H
 

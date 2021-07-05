@@ -94,7 +94,8 @@ public:
 	}
 
 	// 顺序存储线性表的数组访问方式
-	T& operator[] (int i)		// 如果SeqList非const数据，调用这个
+	// 如果SeqList非const数据，调用这个
+	T& operator[] (int i)		
 	{
 		if((0 <= i) && (i < m_length))
 		{
@@ -106,7 +107,8 @@ public:
 		}
 	}
 
-	T operator[] (int i) const // 如果SeqList是const数据，调用这个
+	// 如果SeqList是const数据，调用这个
+	T operator[] (int i) const 
 	{
 		return (const_cast<SeqList<T>&>(*this)[i]);
 	}

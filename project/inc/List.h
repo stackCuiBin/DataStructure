@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: V0.01
+ * @Author: Cuibb
+ * @Date: 2019-08-05 22:58:47
+ * @LastEditors: Cuibb
+ * @LastEditTime: 2021-07-06 01:17:14
+ */
 #ifndef LIST_H
 #define LIST_H
 
@@ -14,10 +22,11 @@ protected:
 	List& operator=(const List& e);
 public:
 	List() {};
-	virtual bool insert(int i, const T& e) = 0;
-	virtual bool remove(int i) = 0;
-	virtual bool set(int i, const T& e) = 0;
-	virtual bool get(int i, T& e) = 0;
+	virtual bool insert(const T& e) = 0;
+	virtual bool insert(int pos, const T& e) = 0;
+	virtual bool remove(int pos) = 0;
+	virtual bool set(int pos, const T& e) = 0;
+	virtual bool get(int pos, T& e) const = 0;
 	virtual int length() const = 0;
 	virtual void clear() = 0;
 };

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: V0.01
+ * @Author: Cuibb
+ * @Date: 2019-07-30 00:59:08
+ * @LastEditors: Cuibb
+ * @LastEditTime: 2021-07-06 01:26:28
+ */
 /*************************************************************************
  ******* File Name: Object.cpp
  ******* Author: bb.cui
@@ -16,15 +24,11 @@ namespace DTLib
 
 void* Object::operator new (unsigned long size) throw()
 {
-    cout << "operator new : " << size << endl;
-
     return malloc(size);
 }
 
 void Object::operator delete (void* p)
 {
-    cout << "operator delete : " << p << endl;
-
     free(p);
 }
 
