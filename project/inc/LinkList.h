@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-06 00:42:47
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-06 02:04:19
+ * @LastEditTime: 2021-07-08 00:16:27
  */
 #ifndef LINKLIST_H
 #define LINKLIST_H
@@ -36,6 +36,8 @@ protected:
         Node* next;
     }m_header; 
     int m_length;
+    Node* m_current;
+    int m_step;
 
     Node* position(int pos) const
     {
@@ -49,11 +51,23 @@ protected:
         return ret;
     }
 
+    virtual Node* create()
+    {
+        return new Node();
+    }
+
+    virtual void destory(Node* pn)
+    {
+        delete pn;
+    }
+
 public:
     LinkList()
     {
         m_header.next = NULL;
         m_length = 0;
+        m_current = NULL;
+        m_step = 1;
     }
 
     bool insert(const T& e)
@@ -67,7 +81,7 @@ public:
         
         if ( ret )
         {
-            Node* node = new Node();
+            Node* node = create();
 
             if ( node != NULL )
             {
@@ -99,7 +113,7 @@ public:
 
             current->next = toDel->next;
 
-            delete toDel;
+            destory(toDel);
             m_length--;
         }
 
@@ -145,6 +159,30 @@ public:
         return ret;
     }
 
+    int find(const T& e) const
+    {
+        int ret = -1;
+        int pos = 0;
+        Node* node = m_header.next;
+
+        while( node )
+        {
+            // 此处的比较操作符不一定适用于所有的泛指类型
+            if ( node->value == e )
+            {
+                ret = pos;
+                break;
+            }
+            else
+            {
+                node = node->next;
+                pos++;
+            }
+        }
+
+        return ret;
+    }
+
 	int length() const
     {
         return m_length;
@@ -158,9 +196,56 @@ public:
 
             m_header.next = toDel->next;
 
-            delete toDel;
+            destory(toDel);
         }
         m_length = 0;
+    }
+
+    bool move(int pos, int step = 1)
+    {
+        bool ret = (0 <= pos) && (pos < m_length) && (step > 0);
+
+        if ( ret )
+        {
+            m_current = position(pos)->next;
+            m_step = step;
+        }
+        else
+        {
+            THROW_EXCEPTION(InvalidParameterException, "Invalid para in LinkList::move ...");
+        }
+
+        return ret;
+    }
+
+    bool end()
+    {
+        return (m_current == NULL);
+    }
+
+    T current()
+    {
+        if ( !end() )
+        {
+            return m_current->value;
+        }
+        else
+        {
+            THROW_EXCEPTION(InvalidOperationException, "No value in current position ...");
+        }
+    }
+
+    bool next()
+    {
+        int step = 0;
+
+        while( (step < m_step) && !end() )
+        {
+            m_current = m_current->next;
+            step++;
+        }
+
+        return (step == m_step);
     }
 
     ~LinkList()

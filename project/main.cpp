@@ -153,9 +153,13 @@ int main(int argc, const char* argv[])
 		cout << ll.get(i) << endl;
 	}
 	ll.remove(2);
-	for(int i = 0; i < ll.length(); i++)
+	for(int i = 0; i < ll.length(); i++) // O(n*n)
 	{
 		cout << ll.get(i) << endl;
+	}
+	for(ll.move(0); !ll.end(); ll.next())
+	{
+		cout << ll.current() << endl;
 	}
 #endif
     return 0;

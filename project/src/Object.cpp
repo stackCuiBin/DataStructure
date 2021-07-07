@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-07-30 00:59:08
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-06 01:26:28
+ * @LastEditTime: 2021-07-07 23:18:22
  */
 /*************************************************************************
  ******* File Name: Object.cpp
@@ -40,6 +40,16 @@ void* Object::operator new[] (unsigned long size) throw()
 void Object::operator delete[] (void* p)
 {
     free(p);
+}
+
+bool Object::operator == (const Object& obj)
+{
+    return (this == &obj);
+}
+
+bool Object::operator != (const Object& obj)
+{
+    return (this != &obj);
 }
 
 Object::~Object()
