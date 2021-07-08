@@ -13,6 +13,7 @@
 #include "StaticArray.h"
 #include "DynamicArray.h"
 #include "LinkList.h"
+#include "StaticLinkList.h"
 
 using namespace std;
 using namespace DTLib;
@@ -23,7 +24,8 @@ using namespace DTLib;
 // #define DynamicList_TEST  1
 // #define StaticArray_TEST  1
 // #define DynamicArray_TEST 1
-#define LinkList_TEST     1
+// #define LinkList_TEST     1
+#define StaticLinkList_TEST 1
 
 int main(int argc, const char* argv[])
 {
@@ -153,14 +155,28 @@ int main(int argc, const char* argv[])
 		cout << ll.get(i) << endl;
 	}
 	ll.remove(2);
-	for(int i = 0; i < ll.length(); i++) // O(n*n)
+	for(int i = 0; i < ll.length(); i++)   // O(n*n)
 	{
 		cout << ll.get(i) << endl;
 	}
-	for(ll.move(0); !ll.end(); ll.next())
+	for(ll.move(0); !ll.end(); ll.next())	// O(n)
 	{
 		cout << ll.current() << endl;
 	}
 #endif
+
+#ifdef StaticLinkList_TEST
+	StaticLinkList<int, 5> sll;
+
+	for(int i = 0; i < 5; i++)
+	{
+		sll.insert(i, i);
+	}
+	for(sll.move(0); !sll.end(); sll.next())	// O(n)
+	{
+		cout << sll.current() << endl;
+	}
+#endif
+
     return 0;
 }

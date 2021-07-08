@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-06 00:42:47
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-08 00:16:27
+ * @LastEditTime: 2021-07-08 22:23:30
  */
 #ifndef LINKLIST_H
 #define LINKLIST_H
@@ -56,7 +56,7 @@ protected:
         return new Node();
     }
 
-    virtual void destory(Node* pn)
+    virtual void destroy(Node* pn)
     {
         delete pn;
     }
@@ -113,7 +113,7 @@ public:
 
             current->next = toDel->next;
 
-            destory(toDel);
+            destroy(toDel);
             m_length--;
         }
 
@@ -196,7 +196,7 @@ public:
 
             m_header.next = toDel->next;
 
-            destory(toDel);
+            destroy(toDel);
         }
         m_length = 0;
     }
