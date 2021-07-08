@@ -14,28 +14,67 @@
 #include "DynamicArray.h"
 #include "LinkList.h"
 #include "StaticLinkList.h"
+#include "SharedPointer.h"
 
 using namespace std;
 using namespace DTLib;
 
 // #define SmartPointer_TEST 1
+#define SharedPointer_TEST 1
 // #define Exception_TEST    1
 // #define StaticList_TEST   1
 // #define DynamicList_TEST  1
 // #define StaticArray_TEST  1
 // #define DynamicArray_TEST 1
 // #define LinkList_TEST     1
-#define StaticLinkList_TEST 1
+// #define StaticLinkList_TEST 1
+
+class Test : public Object
+{
+public:
+	int m_value;
+	Test(int value) : m_value(value)
+	{ 
+		cout << "Test " << m_value << endl; 
+	}
+
+	~Test() 
+	{ 
+		cout << "~Test " << m_value << endl;
+	}
+};
 
 int main(int argc, const char* argv[])
 {
 #ifdef SmartPointer_TEST
-	cout << "SmartPointer test begin ..." << endl;
-    SmartPointer<int>* sp = new SmartPointer<int>();
+    SmartPointer<Test> sp1 = new Test(1);
+	SmartPointer<Test> sp2 = new Test(2);
 
-    delete sp;
-	cout << "SmartPointer test end" << endl << endl;
+	// sp2指向的Test2销毁, sp1指针指向NULL
+	sp2 = sp1;
+	cout << "sp1 " << sp1.get() << endl;
+	cout << "sp2 " << sp2.get() << endl;
+
+	cout << "&sp1 " << &sp1<< endl;
+	cout << "&sp2 " << &sp2 << endl;
+	//sp2先析构，Test2销毁，sp1后析构
 #endif
+
+#ifdef SharedPointer_TEST
+	SharedPointer<Test> sp1 = new Test(1);
+	SharedPointer<Test> sp2(sp1);
+	SharedPointer<Test> sp3;
+
+	sp3 = sp2;
+	sp3->m_value = 100;
+
+	cout << sp1->m_value << endl;
+	cout << sp2->m_value << endl;
+	cout << sp3->m_value << endl;
+
+	cout << (sp1 == sp2) << endl;
+#endif
+
 #ifdef Exception_TEST
 	cout << "Exception test begin ..." << endl;
     InvalidOperationException* e = new InvalidOperationException(0);

@@ -19,7 +19,8 @@ void Exception::init(const char* message, const char* file, int line)
 {
     if(message != NULL)
     {
-        m_message = strdup(message);
+        // 需要考虑message为空时，防止strdup异常
+        m_message = (message ? strdup(message) : NULL);
     }
     else
     {

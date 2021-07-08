@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-06 00:42:47
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-08 22:23:30
+ * @LastEditTime: 2021-07-08 22:51:11
  */
 #ifndef LINKLIST_H
 #define LINKLIST_H
@@ -111,10 +111,17 @@ public:
             Node* current = position(pos);
             Node* toDel = current->next;
 
+            if ( m_current == toDel )
+            {
+                m_current = toDel->next;
+            }
+
             current->next = toDel->next;
 
-            destroy(toDel);
+            // 先将长度减 1，防止destroy抛出异常导致链表状态异常
             m_length--;
+            
+            destroy(toDel);
         }
 
         return ret;
@@ -147,6 +154,7 @@ public:
 
         return ret;
     }
+    
 	bool get(int pos, T& e) const
     {
         bool ret = (0 <= pos) && (pos < m_length);
@@ -196,9 +204,10 @@ public:
 
             m_header.next = toDel->next;
 
+            m_length--;
+
             destroy(toDel);
         }
-        m_length = 0;
     }
 
     bool move(int pos, int step = 1)

@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-08 00:45:23
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-08 22:29:46
+ * @LastEditTime: 2021-07-08 23:03:34
  */
 #ifndef STATICLINKLIST_H
 #define STATICLINKLIST_H
@@ -60,6 +60,7 @@ protected:
             {
                 m_used[i] = 0;
                 psn->~SNode();
+                break;
             }
         }
     }
@@ -80,6 +81,7 @@ public:
         return N;
     }
 
+    // 构造和析构函数中不会发生多态，调用的都是类中实现的方法
     ~StaticLinkList()
     {
         // 如果不使用using声明clear，使用this->clear()也可
