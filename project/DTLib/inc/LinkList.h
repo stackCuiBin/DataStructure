@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-06 00:42:47
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-08 22:51:11
+ * @LastEditTime: 2021-07-12 01:17:51
  */
 #ifndef LINKLIST_H
 #define LINKLIST_H
@@ -39,6 +39,8 @@ protected:
     Node* m_current;
     int m_step;
 
+    // pos = 0，获取的是头结点
+    // pos = m_length，获取的是尾结点
     Node* position(int pos) const
     {
         Node* ret = reinterpret_cast<Node*>(&m_header);
@@ -139,7 +141,7 @@ public:
         return ret;
     }
 
-    T get(int pos) const
+    virtual T get(int pos) const
     {
         T ret;
 
@@ -210,7 +212,7 @@ public:
         }
     }
 
-    bool move(int pos, int step = 1)
+    virtual bool move(int pos, int step = 1)
     {
         bool ret = (0 <= pos) && (pos < m_length) && (step > 0);
 
@@ -227,12 +229,12 @@ public:
         return ret;
     }
 
-    bool end()
+    virtual bool end()
     {
         return (m_current == NULL);
     }
 
-    T current()
+    virtual T current()
     {
         if ( !end() )
         {
@@ -244,7 +246,7 @@ public:
         }
     }
 
-    bool next()
+    virtual bool next()
     {
         int step = 0;
 

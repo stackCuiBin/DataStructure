@@ -15,12 +15,13 @@
 #include "LinkList.h"
 #include "StaticLinkList.h"
 #include "SharedPointer.h"
+#include "CircleList.h"
 
 using namespace std;
 using namespace DTLib;
 
 // #define SmartPointer_TEST 1
-#define SharedPointer_TEST 1
+// #define SharedPointer_TEST 1
 // #define Exception_TEST    1
 // #define StaticList_TEST   1
 // #define DynamicList_TEST  1
@@ -28,6 +29,31 @@ using namespace DTLib;
 // #define DynamicArray_TEST 1
 // #define LinkList_TEST     1
 // #define StaticLinkList_TEST 1
+#define CircleList_TEST   1
+
+#ifdef CircleList_TEST
+// 约瑟夫问题，
+void josehus(int Total, int StartNum, int Step)
+{
+	CircleList<int> cl;
+
+	for(int i = 0; i < Total; i++)
+	{
+		cl.insert(i);
+	}
+
+	cl.move(StartNum, Step-1);
+
+	while(cl.length() > 0)
+	{
+		cl.next();
+
+		cout << cl.current() << endl;
+
+		cl.remove(cl.find(cl.current()));
+	}
+}
+#endif
 
 class Test : public Object
 {
@@ -215,6 +241,10 @@ int main(int argc, const char* argv[])
 	{
 		cout << sll.current() << endl;
 	}
+#endif
+
+#ifdef CircleList_TEST
+	josehus(41, 1, 3);
 #endif
 
     return 0;
