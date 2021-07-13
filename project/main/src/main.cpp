@@ -16,6 +16,7 @@
 #include "StaticLinkList.h"
 #include "SharedPointer.h"
 #include "CircleList.h"
+#include "DualLinkList.h"
 
 using namespace std;
 using namespace DTLib;
@@ -29,7 +30,8 @@ using namespace DTLib;
 // #define DynamicArray_TEST 1
 // #define LinkList_TEST     1
 // #define StaticLinkList_TEST 1
-#define CircleList_TEST   1
+// #define CircleList_TEST   1
+#define DualLinkList_TEST   1
 
 #ifdef CircleList_TEST
 // 约瑟夫问题，
@@ -245,6 +247,42 @@ int main(int argc, const char* argv[])
 
 #ifdef CircleList_TEST
 	josehus(41, 1, 3);
+#endif
+
+#ifdef DualLinkList_TEST
+	DualLinkList<int> dl;
+	for(int i = 0; i < 5; i++)
+	{
+		dl.insert(0, i);
+		dl.insert(0, 5);
+	}
+	for(dl.move(0); !dl.end(); dl.next())
+	{
+		cout << dl.current() << endl;
+	}
+
+	cout << "begin" << endl;
+
+	dl.move(0);
+	while( !dl.end() )
+	{
+		if ( dl.current() == 5 )
+		{
+			cout << dl.current() << endl;
+			dl.remove(dl.find(dl.current()));
+		}
+		else
+		{
+			dl.next();
+		}
+	}
+
+	cout << "end" << endl;
+
+	for(dl.move(0); !dl.end(); dl.next())
+	{
+		cout << dl.current() << endl;
+	}
 #endif
 
     return 0;
