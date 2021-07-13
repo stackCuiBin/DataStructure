@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-11 23:33:37
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-12 02:05:31
+ * @LastEditTime: 2021-07-13 23:06:35
  */
 #ifndef CIRCLELIST_H
 #define CIRCLRLIST_H
@@ -99,6 +99,8 @@ public:
         {
             ret = LinkList<T>::remove(pos);
         }
+
+        return ret;
     }
 
     bool set(int pos, const T& e)

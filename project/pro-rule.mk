@@ -10,9 +10,9 @@ EXTERNAL_LIB := $(patsubst $(DIR_LIBS_LIB)/%, $(DIR_BUILD)/%, $(EXTERNAL_LIB))
 APP := $(addprefix $(DIR_BUILD)/, $(APP))
 
 define makemodule
-	cd ${1} && \
+	cd $(1) && \
 	$(MAKE) all \
-		DEBUG:=true \
+		DEBUG:=$(DEBUG) \
 		DIR_BUILD:=$(addprefix $(DIR_PROJECT)/, $(DIR_BUILD)) \
 		DIR_COMMON_INC:=$(addprefix $(DIR_PROJECT)/, $(DIR_COMMON_INC)) \
 		DIR_LIBS_INC:=$(addprefix $(DIR_PROJECT)/, $(DIR_LIBS_INC)) \

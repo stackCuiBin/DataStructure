@@ -29,8 +29,8 @@ $(OUTPUT) : $(OBJS)
 $(DIR_OUTPUT)/%$(TYPE_OBJ) : %$(TYPE_SRC)
 	$(CC) $(CFLAGS) -o $@ -c $(filter %$(TYPE_SRC), $^)
 	
-$(DIR_OUTPUT)%$(TYPE_DEP) : %$(TYPE_SRC)
+$(DIR_OUTPUT)/%$(TYPE_DEP) : %$(TYPE_SRC)
 	@echo "Create $@ ..."
 	@set -e; \
-	$(CC) $(CFLAGS) -MM -E $(filter %$(TYPE_SRC), $^) | sed 's,\(\.*\)\$(TYPE_OBJ)[ :]*,$(DIR_OUTPUT)/\1$(TYPE_OBJ) $@ : ,g' > $@
+	$(CC) $(CFLAGS) -MM -E $(filter %$(TYPE_SRC), $^) | sed 's,\(.*\)\$(TYPE_OBJ)[ :]*,$(DIR_OUTPUT)/\1$(TYPE_OBJ) $@ : ,g' > $@
 
