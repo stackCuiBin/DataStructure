@@ -743,3 +743,26 @@
     双向链表中的游标能够直接访问当前结点的前驱和后继
     双向链表是线性表概念的最终实现(更贴近理论上的线性表)
     实现双向链表的子类：DualStaticLinkList和DualCirleList
+
+第31课 老生常谈的两个宏
+    Linux内核中常用的两个宏定义
+    #ifndef offsetof
+    #define offsetof(TYPE, MEMBER)  ((size_t)&((TYPE*)0)->MEMBER)
+    #endif
+
+    #ifndef container_of
+    #define container_of(ptr, type, member) ({                     \
+            const typeof(((type*)0)->member)* __mptr = (ptr);      \    //类型检查
+            (type*)((char*)__mptr - offsetof(type, member));})
+    #endif
+
+    offsetof用于计算TYPE结构体中MEMBER成员的偏移位置
+        编译器清楚的知道结构体成员变量的偏移位置
+        通过结构体变量首地址与偏移量定位成员变量
+
+    container_of
+        ({ })是GNU C编译器的语法扩展
+        ({ })与逗号表达式类似，结果为最后一个语句的值
+
+        typeof是GNU C编译器的特有关键字
+        typeof只在编译期生效，用于得到变量的类型

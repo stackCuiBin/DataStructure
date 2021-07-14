@@ -2,23 +2,23 @@
  * @Descripttion: 
  * @version: V0.01
  * @Author: Cuibb
- * @Date: 2021-07-11 23:33:37
+ * @Date: 2021-07-15 00:40:35
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-15 01:43:36
+ * @LastEditTime: 2021-07-15 01:43:22
  */
-#ifndef CIRCLELIST_H
-#define CIRCLRLIST_H
+#ifndef DUALCIRCLELIST_H
+#define DUALCIRCLELIST_H
 
-#include "LinkList.h"
+#include "DualLinkList.h"
 
 namespace DTLib
 {
 
 template <typename T>
-class CircleList : public LinkList<T>
+class DualCircleList : public DualLinkList<T>
 {
 protected:
-    typedef typename LinkList<T>::Node Node;
+    typedef typename DualLinkList<T>::Node Node;
 
     int mod(int i) const
     {
@@ -32,7 +32,10 @@ protected:
 
     void last_to_first() const
     {
-        last()->next = this->m_header.next;
+        Node* tail = last();
+
+        tail->next = this->m_header.next;
+        this->m_header.next->pre = tail;
     }
 
 public:
@@ -50,7 +53,7 @@ public:
             pos = pos % (this->m_length * 2);
         }
         pos = pos % (this->m_length + 1);
-        ret = LinkList<T>::insert(pos, e);
+        ret = DualLinkList<T>::insert(pos, e);
         if ( ret && (pos == 0) )
         {
             last_to_first();
@@ -97,7 +100,7 @@ public:
         }
         else
         {
-            ret = LinkList<T>::remove(pos);
+            ret = DualLinkList<T>::remove(pos);
         }
 
         return ret;
@@ -105,17 +108,17 @@ public:
 
     bool set(int pos, const T& e)
     {
-        return LinkList<T>::set(mod(pos), e);
+        return DualLinkList<T>::set(mod(pos), e);
     }
 
     T get(int pos) const
     {
-        return LinkList<T>::get(mod(pos));
+        return DualLinkList<T>::get(mod(pos));
     }
 
     bool get(int pos, const T& e) const
     {
-        return LinkList<T>::get(mod(pos), e);
+        return DualLinkList<T>::get(mod(pos), e);
     }
 
     int find(const T& e) const
@@ -158,7 +161,7 @@ public:
 
     bool move(int pos, int step)
     {
-        return LinkList<T>::move(mod(pos), step);
+        return DualLinkList<T>::move(mod(pos), step);
     }
 
     /* 此结束实现有问题 */
@@ -167,7 +170,7 @@ public:
         return (this->m_length == 0) || (this->m_current == NULL);
     }
 
-    ~CircleList()
+    ~DualCircleList()
     {
         clear();
     }
@@ -175,4 +178,4 @@ public:
 
 }
 
-#endif  // CIRCLELIST_H
+#endif  // DUALCIRCLELIST_H

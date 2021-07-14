@@ -17,6 +17,8 @@
 #include "SharedPointer.h"
 #include "CircleList.h"
 #include "DualLinkList.h"
+#include "DualStaticLinkList.h"
+#include "DualCircleList.h"
 
 using namespace std;
 using namespace DTLib;
@@ -31,7 +33,9 @@ using namespace DTLib;
 // #define LinkList_TEST     1
 // #define StaticLinkList_TEST 1
 // #define CircleList_TEST   1
-#define DualLinkList_TEST   1
+// #define DualLinkList_TEST   1
+// #define DualStaticLinkList_TEST   1
+#define DualCircleList_TEST   1
 
 #ifdef CircleList_TEST
 // 约瑟夫问题，
@@ -247,6 +251,17 @@ int main(int argc, const char* argv[])
 
 #ifdef CircleList_TEST
 	josehus(41, 1, 3);
+
+	CircleList<int> cl;
+
+	for(int i = 0; i < 5; i++)
+	{
+		cl.insert(i, i);
+	}
+	for(cl.move(0, 1); !cl.end(); cl.next())	// O(n)
+	{
+		cout << cl.current() << endl;
+	}
 #endif
 
 #ifdef DualLinkList_TEST
@@ -282,6 +297,33 @@ int main(int argc, const char* argv[])
 	for(dl.move(0); !dl.end(); dl.next())
 	{
 		cout << dl.current() << endl;
+	}
+#endif
+
+#ifdef DualStaticLinkList_TEST
+	DualStaticLinkList<int, 5> dsll;
+
+	for(int i = 0; i < 5; i++)
+	{
+		dsll.insert(i, i);
+	}
+	for(dsll.move(0); !dsll.end(); dsll.next())	// O(n)
+	{
+		cout << dsll.current() << endl;
+	}
+#endif
+
+#ifdef DualCircleList_TEST
+	DualCircleList<int> dcl;
+
+	for(int i = 0; i < 5; i++)
+	{
+		dcl.insert(i, i);
+	}
+
+	for(dcl.move(0, 1); !dcl.end(); dcl.next())	// O(n)
+	{
+		cout << dcl.current() << endl;
 	}
 #endif
 

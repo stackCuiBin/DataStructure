@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-13 23:41:59
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-14 01:43:25
+ * @LastEditTime: 2021-07-15 01:46:22
  */
 #ifndef DUALLINKLIST_H
 #define DUALLINKLIST_H
@@ -126,22 +126,15 @@ public:
             Node* toDel = current->next;
             Node* next = toDel->next;
 
-            current->next = next;
-            if ( next != NULL )
-            {
-                if ( current != reinterpret_cast<Node*>(&m_header) )
-                {
-                    next->pre = current;
-                }
-                else
-                {
-                    next->pre = NULL;
-                }
-            }
-
             if ( m_current == toDel )
             {
                 m_current = next;
+            }
+
+            current->next = next;
+            if ( next != NULL )
+            {
+                next->pre = toDel->pre;
             }
 
             // 先将长度减 1，防止destroy抛出异常导致链表状态异常
@@ -174,7 +167,7 @@ public:
         }
         else
         {
-            THROW_EXCEPTION(InvalidParameterException, "LinkList:: Invalid parameter");
+            THROW_EXCEPTION(InvalidParameterException, "DualLinkList:: Invalid parameter");
         }
 
         return ret;
@@ -240,7 +233,7 @@ public:
         }
         else
         {
-            THROW_EXCEPTION(InvalidParameterException, "Invalid para in LinkList::move ...");
+            THROW_EXCEPTION(InvalidParameterException, "Invalid para in DualLinkList::move ...");
         }
 
         return ret;

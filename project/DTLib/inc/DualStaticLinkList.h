@@ -2,23 +2,23 @@
  * @Descripttion: 
  * @version: V0.01
  * @Author: Cuibb
- * @Date: 2021-07-08 00:45:23
+ * @Date: 2021-07-15 00:24:58
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-15 00:38:55
+ * @LastEditTime: 2021-07-15 00:42:00
  */
-#ifndef STATICLINKLIST_H
-#define STATICLINKLIST_H
+#ifndef DUALSTATICLINKLIST_H
+#define DUALSTATICLINKLIST_H
 
-#include "LinkList.h"
+#include "DualLinkList.h"
 
 namespace DTLib 
 {
 
 template <typename T, int N>
-class StaticLinkList : public LinkList<T>
+class DualStaticLinkList : public DualLinkList<T>
 {
 protected:
-    typedef typename LinkList<T>::Node Node;
+    typedef typename DualLinkList<T>::Node Node;
 
     struct SNode : public Node
     {
@@ -66,9 +66,9 @@ protected:
     }
 
 public:
-    using LinkList<T>::clear;
+    using DualLinkList<T>::clear;
 
-    StaticLinkList()
+    DualStaticLinkList()
     {
         for(int i = 0; i < N; i++)
         {
@@ -82,7 +82,7 @@ public:
     }
 
     // 构造和析构函数中不会发生多态，调用的都是类中实现的方法
-    ~StaticLinkList()
+    ~DualStaticLinkList()
     {
         // 如果不使用using声明clear，使用this->clear()也可
         clear();
@@ -91,4 +91,4 @@ public:
 
 }
 
-#endif
+#endif  // DUALSTATICLINKLIST_H
