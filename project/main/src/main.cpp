@@ -19,6 +19,8 @@
 #include "DualLinkList.h"
 #include "DualStaticLinkList.h"
 #include "DualCircleList.h"
+#include "StaticStack.h"
+#include "LinkStack.h"
 
 using namespace std;
 using namespace DTLib;
@@ -35,7 +37,83 @@ using namespace DTLib;
 // #define CircleList_TEST   1
 // #define DualLinkList_TEST   1
 // #define DualStaticLinkList_TEST   1
-#define DualCircleList_TEST   1
+// #define DualCircleList_TEST   1
+// #define StaticStack_TEST 1
+#define LinkStack_TEST 1
+
+#ifdef LinkStack_TEST
+bool is_left(char c)
+{
+	return (c == '(') || (c == '{') || (c == '[') || (c == '<');
+}
+
+bool is_rigth(char c)
+{
+	return (c == ')') || (c == '}') || (c == ']') || (c == '>');
+}
+
+bool is_quot(char c)
+{
+	return (c == '\'') || (c == '\"');
+}
+
+bool is_match(char left, char right)
+{
+	return ( ((left == '(') && (right == ')')) ||
+			 ((left == '[') && (right == ']')) ||
+			 ((left == '{') && (right == '}')) ||
+			 ((left == '<') && (right == '>')) ||
+			 ((left == '\'') && (right == '\'')) ||
+			 ((left == '\"') && (right == '\"')) );
+}
+
+bool scanf(const char* code)
+{
+	int ret = true;
+	int i = 0;
+	LinkStack<char> lstack;
+
+	code = (code == NULL) ? "" : code;
+
+	while( ret && code[i] != '\0' )
+	{
+		if ( is_left(code[i]) )
+		{
+			lstack.push(code[i]);
+		}
+		else if ( is_rigth(code[i]) )
+		{
+			if ( (lstack.size() > 0) && is_match(lstack.top(), code[i]) )
+			{
+				lstack.pop();
+			}
+			else
+			{
+				ret = false;
+			}
+		}
+		else if ( is_quot(code[i]) )
+		{
+			if ( (lstack.size() == 0) || !is_match(lstack.top(), code[i]) )
+			{
+				lstack.push(code[i]);
+			}
+			else if ( is_match(lstack.top(), code[i]) )
+			{
+				lstack.pop();
+			}
+			else
+			{
+				ret = false;
+			}
+		}
+
+		i++;
+	}
+
+	return ret && (lstack.size() == 0);
+}
+#endif
 
 #ifdef CircleList_TEST
 // 约瑟夫问题，
@@ -329,6 +407,27 @@ int main(int argc, const char* argv[])
 	int ret = dcl.find(10);
 	cout << "ret = " << ret << endl;
 	dcl.move(0);
+#endif
+
+#ifdef StaticStack_TEST
+	StaticStack<int, 5> sstack;
+
+	for(int i = 0; i < sstack.capacity(); i++)
+	{
+		sstack.push(i);
+	}
+
+	while( sstack.size() > 0 )
+	{
+		cout << sstack.top() << endl;
+
+		sstack.pop();
+	}
+#endif
+
+#ifdef LinkStack_TEST
+	cout << scanf("({<>})") << endl;
+	cout << scanf("<(})>") << endl;
 #endif
 
     return 0;
