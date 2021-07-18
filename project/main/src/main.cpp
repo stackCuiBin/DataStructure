@@ -21,6 +21,8 @@
 #include "DualCircleList.h"
 #include "StaticStack.h"
 #include "LinkStack.h"
+#include "StaticQueue.h"
+#include "LinkQueue.h"
 
 using namespace std;
 using namespace DTLib;
@@ -39,7 +41,9 @@ using namespace DTLib;
 // #define DualStaticLinkList_TEST   1
 // #define DualCircleList_TEST   1
 // #define StaticStack_TEST 1
-#define LinkStack_TEST 1
+// #define LinkStack_TEST 1
+// #define StaticQueue_TEST 1
+#define LinkQueue_TEST 1
 
 #ifdef LinkStack_TEST
 bool is_left(char c)
@@ -428,6 +432,33 @@ int main(int argc, const char* argv[])
 #ifdef LinkStack_TEST
 	cout << scanf("({<>})") << endl;
 	cout << scanf("<(})>") << endl;
+#endif
+
+#ifdef StaticQueue_TEST
+	StaticQueue<int, 5> sq;
+
+	for(int i = 0; i < sq.capacity(); i++)
+	{
+		sq.add(i);
+	}
+	while( sq.length() > 0 )
+	{
+		cout << sq.front() << endl;
+		sq.remove();
+	}
+#endif
+
+#ifdef LinkQueue_TEST
+	LinkQueue<int> lq;
+	for(int i = 0; i < 10; i++)
+	{
+		lq.add(i);
+	}
+	while( lq.length() > 0 )
+	{
+		cout << lq.front() << endl;
+		lq.remove();
+	}
 #endif
 
     return 0;
