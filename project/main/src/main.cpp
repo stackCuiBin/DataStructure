@@ -321,10 +321,14 @@ int main(int argc, const char* argv[])
 		dcl.insert(i, i);
 	}
 
-	for(dcl.move(0, 1); !dcl.end(); dcl.next())	// O(n)
-	{
-		cout << dcl.current() << endl;
-	}
+	// 因为是循环双向链表，所以end()不会遍历结束，会无限循环
+	// for(dcl.move(0, 1); !dcl.end(); dcl.next())
+	// {
+	// 	cout << dcl.current() << endl;
+	// }
+	int ret = dcl.find(10);
+	cout << "ret = " << ret << endl;
+	dcl.move(0);
 #endif
 
     return 0;

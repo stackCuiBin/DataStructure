@@ -766,3 +766,46 @@
 
         typeof是GNU C编译器的特有关键字
         typeof只在编译期生效，用于得到变量的类型
+
+第32课 Linux内核链表分析
+    课程目标
+        移植Linux内核链表，使其适用于非GNU编译器
+        分析Linux内核中链表的基本实现
+
+    移植时的注意事项
+        清楚文件间的依赖
+            剥离依赖文件中与链表实现相关的代码
+        清除平台相关代码（ GNU C ）
+            ({})
+            typeof
+            __builtin_prefetch
+            static inline
+
+    Linux内核链表的实现
+        带头结点的双向循环链表，且头结点为表中成员
+        头结点的 next 指针指向首节点
+        头结点的 prev 指针指向尾结点
+
+第32课小结
+    Linux内核链表移植时需要剔除依赖以及平台相关代码
+    Linux内核链表是带头结点的双向循环链表
+    使用Linux内核链表时需要自定义链表结点
+        将 struct list_head 作为结点结构体的第一个成员或最后一个成员
+        struct list_head 作为最后一个成员时，需要使用 list_entry 宏
+        list_entry 的定义中使用了 container_of 宏
+
+第33课 双向循环链表的实现
+    DTLib中双向循环链表的设计思路
+        数据节点之间在逻辑上构成双向循环链表，头结点仅用于结点的定位。
+
+    实现思路
+        通过模板定义DualCircleList类，继承自DualLinkList类
+        在DualCircleList内部使用Linux内核链表进行实现
+        使用struct list_head 定义 DualCircleList 的头结点
+        特殊处理：循环遍历时忽略头结点
+
+    实现要点
+        通过list_head进行目标结点定位（ position(i) ）
+        通过 list_entry 将 list_head 指针转换为目标结点指针
+        通过 list_for_each 实现int find(const T& e) 函数
+        遍历函数中的 next() 和 pre() 需要考虑跳过头结点
