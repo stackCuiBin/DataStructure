@@ -23,6 +23,7 @@
 #include "LinkStack.h"
 #include "StaticQueue.h"
 #include "LinkQueue.h"
+#include "DTString.h"
 
 using namespace std;
 using namespace DTLib;
@@ -43,7 +44,8 @@ using namespace DTLib;
 // #define StaticStack_TEST 1
 // #define LinkStack_TEST 1
 // #define StaticQueue_TEST 1
-#define LinkQueue_TEST 1
+// #define LinkQueue_TEST 1
+#define DTString_TEST 1
 
 #ifdef LinkStack_TEST
 bool is_left(char c)
@@ -459,6 +461,27 @@ int main(int argc, const char* argv[])
 		cout << lq.front() << endl;
 		lq.remove();
 	}
+#endif
+
+#ifdef DTString_TEST
+	String s;
+	s = "C";
+
+	cout << s.str() << endl;
+	cout << (s > "D") << endl;
+
+	s += "ui";
+	cout << s.str() << endl;
+	cout << s[1] << endl;
+	cout << s.startWith("Cu") << endl;
+	cout << s.endOf("i") << endl;
+
+	s.insert(3, " bin");
+	cout << s.str() << endl;
+
+	s.insert(0, "  Hello ");
+	cout << s.str() << endl;
+	cout << s.trim().str() << endl;
 #endif
 
     return 0;

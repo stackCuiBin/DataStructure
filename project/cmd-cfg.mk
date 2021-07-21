@@ -4,7 +4,9 @@ ARFLAGS := crs
 
 CC := g++
 LFLAGS := 
-CFLAGS := -I$(DIR_COMMON_INC) -I$(DIR_INC) -I$(DIR_LIBS_INC)
+CFLAGS := -O0 -I$(DIR_COMMON_INC) -I$(DIR_INC) -I$(DIR_LIBS_INC)
+
+DEBUG := true
 
 ifeq ($(DEBUG),true)
 CFLAGS += -g
