@@ -6,6 +6,7 @@
  ************************************************************************/
 
 #include <iostream>
+#include <cstring>
 #include "SmartPointer.h"
 #include "Exception.h"
 #include "StaticList.h"
@@ -45,7 +46,7 @@ using namespace DTLib;
 // #define LinkStack_TEST 1
 // #define StaticQueue_TEST 1
 // #define LinkQueue_TEST 1
-#define DTString_TEST 1
+// #define DTString_TEST 1
 
 #ifdef LinkStack_TEST
 bool is_left(char c)
@@ -144,6 +145,72 @@ void josehus(int Total, int StartNum, int Step)
 	}
 }
 #endif
+
+// 求子字符的部分匹配表
+int* make_pmt(const char* p)
+{
+	int len = strlen(p ? p : "");
+	int* ret = static_cast<int*>(malloc(sizeof(int)*len));
+
+	if ( ret != NULL )
+	{
+		int ll = 0;
+
+		ret[0] = 0;
+
+		for(int i = 1; i < len; i++)
+		{
+			while( (ll > 0) && (p[ll] != p[i]) )
+			{
+				// 下标为0时对应字符长度为1
+				ll = ret[ll-1];
+			}
+
+			if ( p[ll] == p[i] )
+			{
+				ll++;
+			}
+
+			ret[i] = ll;
+		}
+	}
+
+	return ret;
+}
+
+int kmp(const char* s, const char* p)
+{
+	int ret = -1;
+	int sl = strlen(s ? s : "");
+	int pl = strlen(p ? p : "");
+	int* pmt = make_pmt(p);
+
+	if ( (pmt != NULL) && (pl > 0) && (pl <= sl) )
+	{
+		for(int i = 0, j = 0; i < sl; i++)
+		{
+			while( (j > 0) && (s[i] != p[j]) )
+			{
+				j = pmt[j-1];
+			}
+
+			if ( s[i] == p[j] )
+			{
+				j++;
+			}
+
+			if ( j == pl )
+			{
+				ret = i + 1 - pl;
+				break;
+			}
+		}
+	}
+
+	free(pmt);
+
+	return ret;
+}
 
 class Test : public Object
 {
@@ -483,6 +550,15 @@ int main(int argc, const char* argv[])
 	cout << s.str() << endl;
 	cout << s.trim().str() << endl;
 #endif
+
+	const char* pc = "ababax";
+	int* pi = make_pmt(pc);
+	for(int i = 0; i < strlen(pc); i++)
+	{
+		cout << pi[i] << endl;
+	}
+
+	cout << "kmp: " << kmp("BBC ABCDAB ABCDABCDABDE", "ABCDABD") << endl;
 
     return 0;
 }
