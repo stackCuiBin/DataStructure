@@ -6,7 +6,6 @@
  ************************************************************************/
 
 #include <iostream>
-#include <cstring>
 #include "SmartPointer.h"
 #include "Exception.h"
 #include "StaticList.h"
@@ -46,7 +45,7 @@ using namespace DTLib;
 // #define LinkStack_TEST 1
 // #define StaticQueue_TEST 1
 // #define LinkQueue_TEST 1
-// #define DTString_TEST 1
+#define DTString_TEST 1
 
 #ifdef LinkStack_TEST
 bool is_left(char c)
@@ -145,72 +144,6 @@ void josehus(int Total, int StartNum, int Step)
 	}
 }
 #endif
-
-// 求子字符的部分匹配表
-int* make_pmt(const char* p)
-{
-	int len = strlen(p ? p : "");
-	int* ret = static_cast<int*>(malloc(sizeof(int)*len));
-
-	if ( ret != NULL )
-	{
-		int ll = 0;
-
-		ret[0] = 0;
-
-		for(int i = 1; i < len; i++)
-		{
-			while( (ll > 0) && (p[ll] != p[i]) )
-			{
-				// 下标为0时对应字符长度为1
-				ll = ret[ll-1];
-			}
-
-			if ( p[ll] == p[i] )
-			{
-				ll++;
-			}
-
-			ret[i] = ll;
-		}
-	}
-
-	return ret;
-}
-
-int kmp(const char* s, const char* p)
-{
-	int ret = -1;
-	int sl = strlen(s ? s : "");
-	int pl = strlen(p ? p : "");
-	int* pmt = make_pmt(p);
-
-	if ( (pmt != NULL) && (pl > 0) && (pl <= sl) )
-	{
-		for(int i = 0, j = 0; i < sl; i++)
-		{
-			while( (j > 0) && (s[i] != p[j]) )
-			{
-				j = pmt[j-1];
-			}
-
-			if ( s[i] == p[j] )
-			{
-				j++;
-			}
-
-			if ( j == pl )
-			{
-				ret = i + 1 - pl;
-				break;
-			}
-		}
-	}
-
-	free(pmt);
-
-	return ret;
-}
 
 class Test : public Object
 {
@@ -453,112 +386,26 @@ int main(int argc, const char* argv[])
 
 #ifdef DualStaticLinkList_TEST
 	DualStaticLinkList<int, 5> dsll;
-
-	for(int i = 0; i < 5; i++)
-	{
-		dsll.insert(i, i);
-	}
-	for(dsll.move(0); !dsll.end(); dsll.next())	// O(n)
-	{
-		cout << dsll.current() << endl;
-	}
-#endif
-
-#ifdef DualCircleList_TEST
-	DualCircleList<int> dcl;
-
-	for(int i = 0; i < 5; i++)
-	{
-		dcl.insert(i, i);
-	}
-
-	// 因为是循环双向链表，所以end()不会遍历结束，会无限循环
-	// for(dcl.move(0, 1); !dcl.end(); dcl.next())
-	// {
-	// 	cout << dcl.current() << endl;
-	// }
-	int ret = dcl.find(10);
-	cout << "ret = " << ret << endl;
-	dcl.move(0);
-#endif
-
-#ifdef StaticStack_TEST
-	StaticStack<int, 5> sstack;
-
-	for(int i = 0; i < sstack.capacity(); i++)
-	{
-		sstack.push(i);
-	}
-
-	while( sstack.size() > 0 )
-	{
-		cout << sstack.top() << endl;
-
-		sstack.pop();
-	}
-#endif
-
-#ifdef LinkStack_TEST
-	cout << scanf("({<>})") << endl;
-	cout << scanf("<(})>") << endl;
-#endif
-
-#ifdef StaticQueue_TEST
-	StaticQueue<int, 5> sq;
-
-	for(int i = 0; i < sq.capacity(); i++)
-	{
-		sq.add(i);
-	}
-	while( sq.length() > 0 )
-	{
-		cout << sq.front() << endl;
-		sq.remove();
-	}
-#endif
-
-#ifdef LinkQueue_TEST
-	LinkQueue<int> lq;
-	for(int i = 0; i < 10; i++)
-	{
-		lq.add(i);
-	}
-	while( lq.length() > 0 )
-	{
-		cout << lq.front() << endl;
-		lq.remove();
-	}
-#endif
-
-#ifdef DTString_TEST
-	String s;
-	s = "C";
-
-	cout << s.str() << endl;
-	cout << (s > "D") << endl;
-
-	s += "ui";
-	cout << s.str() << endl;
-	cout << s[1] << endl;
-	cout << s.startWith("Cu") << endl;
-	cout << s.endOf("i") << endl;
-
-	s.insert(3, " bin");
-	cout << s.str() << endl;
-
+int kmp(const char* s, const char* p)
 	s.insert(0, "  Hello ");
 	cout << s.str() << endl;
 	cout << s.trim().str() << endl;
 #endif
 
-	const char* pc = "ababax";
-	int* pi = make_pmt(pc);
-	for(int i = 0; i < strlen(pc); i++)
-	{
-		cout << pi[i] << endl;
-	}
+#ifdef DTString_TEST
+	String s = "ababax";
+	cout << s.indexOf("bab") << endl;
+	
+	cout << s.remove("baba").str() << endl;
 
-	cout << "kmp: " << kmp("BBC ABCDAB ABCDABCDABDE", "ABCDABD") << endl;
+	s -= "a";
+	cout << s.str() << endl;
+
+	cout << s.replace("x", "hello").str() << endl;
+
+	String ret = s.sub(2, 2);
+	cout << ret.str() << endl;
+#endif
 
     return 0;
 }
