@@ -410,12 +410,16 @@ int kmp(const char* s, const char* p)
 #endif
 
 #ifdef Sort_TEST
-	int array[] = {1, 3, 5, 4, 2};
+	int array[] = {6, 9, 1, 3, 9, 5, 4, 2, 8, 7};
 
 	// Sort::Select(array, 5, false);
-	Sort::Insert(array, 5);
+	// Sort::Insert(array, 5);
+	// Sort::Bubble(array, 5, false);
+	// Sort::Shell(array, 5);
+	// Sort::Merge(array, 10, false);
+	Sort::Quick(array, 10, false);
 
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < 10; i++ )
 	{
 		cout << array[i] << endl;
 	}
