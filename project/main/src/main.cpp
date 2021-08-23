@@ -24,6 +24,7 @@
 #include "StaticQueue.h"
 #include "LinkQueue.h"
 #include "DTString.h"
+#include "Sort.h"
 
 using namespace std;
 using namespace DTLib;
@@ -45,7 +46,8 @@ using namespace DTLib;
 // #define LinkStack_TEST 1
 // #define StaticQueue_TEST 1
 // #define LinkQueue_TEST 1
-#define DTString_TEST 1
+// #define DTString_TEST 1
+#define Sort_TEST 1
 
 #ifdef LinkStack_TEST
 bool is_left(char c)
@@ -405,6 +407,18 @@ int kmp(const char* s, const char* p)
 
 	String ret = s.sub(2, 2);
 	cout << ret.str() << endl;
+#endif
+
+#ifdef Sort_TEST
+	int array[] = {1, 3, 5, 4, 2};
+
+	// Sort::Select(array, 5, false);
+	Sort::Insert(array, 5);
+
+	for( int i = 0; i < 5; i++ )
+	{
+		cout << array[i] << endl;
+	}
 #endif
 
     return 0;

@@ -1,2 +1,6 @@
 a.out
 app.out
+DTLib.a
+*.o
+*.dep
+build
