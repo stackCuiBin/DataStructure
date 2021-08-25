@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: V0.01
+ * @Author: Cuibb
+ * @Date: 2021-07-05 01:04:02
+ * @LastEditors: Cuibb
+ * @LastEditTime: 2021-08-25 23:31:50
+ */
 /*************************************************************************
  ******* File Name: Array.h
  ******* Author: bb.cui
@@ -61,6 +69,11 @@ public:
     T operator[] (int i) const
     {
         return (const_cast<Array<T>&>(*this))[i];
+    }
+
+    T* array() const
+    {
+        return m_array;
     }
 
     virtual int length() const = 0;
