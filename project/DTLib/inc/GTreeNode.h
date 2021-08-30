@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-08-27 00:12:41
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-08-27 00:19:06
+ * @LastEditTime: 2021-08-30 23:41:08
  */
 
 #ifndef GTREENODE_H
@@ -19,8 +19,37 @@ namespace DTLib
 template < typename T >
 class GTreeNode : public TreeNode<T>
 {
+protected:
+    bool m_flag;
+
+    void* operator new (std::size_t size) throw()
+    {
+        return Object::operator new(size);
+    }
+
 public:
     LinkList<GTreeNode<T>*> child;
+
+    GTreeNode()
+    {
+        m_flag = false;
+    }
+
+    bool flag()
+    {
+        return m_flag;
+    }
+
+    static GTreeNode<T>* NewNode()
+    {
+        GTreeNode<T>* ret = new GTreeNode<T>();
+
+        if ( ret != NULL ) {
+            ret->m_flag = true;
+        }
+
+        return ret;
+    }
 };
 
 }

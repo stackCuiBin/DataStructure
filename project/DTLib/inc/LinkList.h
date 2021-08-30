@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-06 00:42:47
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-12 01:17:51
+ * @LastEditTime: 2021-08-28 02:05:31
  */
 #ifndef LINKLIST_H
 #define LINKLIST_H
@@ -220,10 +220,6 @@ public:
         {
             m_current = position(pos)->next;
             m_step = step;
-        }
-        else
-        {
-            THROW_EXCEPTION(InvalidParameterException, "Invalid para in LinkList::move ...");
         }
 
         return ret;
