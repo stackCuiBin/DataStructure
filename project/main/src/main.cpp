@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-08-02 00:00:21
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-08-31 00:31:03
+ * @LastEditTime: 2021-09-01 00:28:29
  */
 /*************************************************************************
  ******* File Name: main.cpp
@@ -69,19 +69,27 @@ int main(int argc, const char* argv[])
 	node = gt.find('H');
 	gt.insert('M', node);
 
-	gt.remove('D');
+	// gt.remove('D');
 	
-	const char* cstr = "KLFGMIJ";
-	for ( int i = 0; i < 7; i++ ) {
-		TreeNode<char>* nodePrint = gt.find(cstr[i]);
+	// const char* cstr = "KLFGMIJ";
+	// for ( int i = 0; i < 7; i++ ) {
+	// 	TreeNode<char>* nodePrint = gt.find(cstr[i]);
 
-		while ( nodePrint != NULL ) {
-			cout << nodePrint->value << " ";
-			nodePrint = nodePrint->parent;
-		}
+	// 	while ( nodePrint != NULL ) {
+	// 		cout << nodePrint->value << " ";
+	// 		nodePrint = nodePrint->parent;
+	// 	}
 
-		cout << endl;
+	// 	cout << endl;
+	// }
+
+	for ( gt.begin(); !gt.end(); gt.next() ) {
+		cout << gt.current() << endl;
 	}
+
+	cout << "count is " << gt.count() << endl;
+	cout << "height is " << gt.height() << endl;
+	cout << "degree is " << gt.degree() << endl;
 
     return 0;
 }

@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-08-27 00:12:41
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-08-30 23:41:08
+ * @LastEditTime: 2021-09-01 00:25:50
  */
 
 #ifndef GTREENODE_H
@@ -21,6 +21,9 @@ class GTreeNode : public TreeNode<T>
 {
 protected:
     bool m_flag;
+
+    GTreeNode(const GTreeNode<T>&);
+    GTreeNode& operator = (const GTreeNode<T>&);
 
     void* operator new (std::size_t size) throw()
     {

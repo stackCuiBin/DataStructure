@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-08-27 00:19:57
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-08-31 00:29:17
+ * @LastEditTime: 2021-09-01 00:27:17
  */
 
 #ifndef GTREE_H
@@ -23,6 +23,9 @@ class GTree : public Tree<T>
 {
 protected:
     LinkQueue<GTreeNode<T>*> m_queue;
+
+    GTree(const GTree<T>&);
+    GTree& operator = (const GTree<T>&);
 
     GTreeNode<T>* find(GTreeNode<T>* node, const T& value) const
     {
@@ -92,7 +95,63 @@ protected:
         }
     }
 
+    int count(GTreeNode<T>* node) const
+    {
+        int ret = 0;
+
+        if ( node != NULL ) {
+            /* 不为空，说明至少有一个结点 */
+            ret = 1;
+
+            for ( node->child.move(0); !node->child.end(); node->child.next() ) {
+                ret += count(node->child.current());
+            }
+        }
+
+        return ret;
+    }
+
+    int height(GTreeNode<T>* node) const
+    {
+        int ret = 0;
+
+        if ( node != NULL ) {
+            for ( node->child.move(0); !node->child.end(); node->child.next() ) {
+                int h = height(node->child.current());
+
+                if ( ret < h ) {
+                    ret = h;
+                }
+            }
+
+            ret = ret + 1;
+        }
+
+        return ret;
+    }
+
+    int degree(GTreeNode<T>* node) const
+    {
+        int ret = 0;
+
+        if ( node != NULL ) {
+            ret = node->child.length();
+
+            for ( node->child.move(0); !node->child.end(); node->child.next() ) {
+                int d = degree(node->child.current());
+
+                if ( ret < d ) {
+                    ret = d;
+                }
+            }
+        }
+
+        return ret;
+    }
+
 public:
+    GTree() {}
+    
     bool insert(TreeNode<T>* node)
     {
         bool ret = true;
@@ -146,6 +205,7 @@ public:
 
         if ( node != NULL ) {
             remove(node, ret);
+            m_queue.clear();
         } else {
             THROW_EXCEPTION(InvalidParameterException, "Node is invalid...");
         }
@@ -161,6 +221,7 @@ public:
 
         if ( node != NULL ) {
             remove(dynamic_cast<GTreeNode<T>*>(node), ret);
+            m_queue.clear();
         } else {
             THROW_EXCEPTION(InvalidParameterException, "Node is invalid...");
         }
@@ -185,17 +246,17 @@ public:
 
     int degree() const
     {
-        return 0;
+        return degree(root());
     }
 
     int count() const
     {
-        return 0;
+        return count(root());
     }
 
     int height() const
     {
-        return 0;
+        return height(root());
     }
 
     void clear()
@@ -203,34 +264,50 @@ public:
         free(root());
         
         this->m_root = NULL;
+
+        m_queue.clear();
     }
 
     bool begin()
     {
-        bool ret = true;
+        bool ret = (root() != NULL);
+
+        if ( ret ) {
+            m_queue.clear();
+            m_queue.add(root());
+        }
 
         return ret;
     }
 
     bool end()
     {
-        bool ret = true;
-
-        return ret;
+        return m_queue.length() == 0;
     }
 
     bool next()
     {
-        bool ret = true;
+        bool ret = (m_queue.length() > 0);
+
+        if ( ret ) {
+            GTreeNode<T>* node = m_queue.front();
+
+            m_queue.remove();
+            for ( node->child.move(0); !node->child.end(); node->child.next() ) {
+                m_queue.add(node->child.current());
+            }
+        }
 
         return ret;
     }
 
     T current()
     {
-        T ret;
-
-        return ret;
+        if ( !end() ) {
+            return m_queue.front()->value;
+        } else {
+            THROW_EXCEPTION(InvalidOperationException, "No value in current position...");
+        }
     }
 
     ~GTree()
