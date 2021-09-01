@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-08-27 00:19:57
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-01 00:27:17
+ * @LastEditTime: 2021-09-01 01:59:28
  */
 
 #ifndef GTREE_H
@@ -23,9 +23,6 @@ class GTree : public Tree<T>
 {
 protected:
     LinkQueue<GTreeNode<T>*> m_queue;
-
-    GTree(const GTree<T>&);
-    GTree& operator = (const GTree<T>&);
 
     GTreeNode<T>* find(GTreeNode<T>* node, const T& value) const
     {
