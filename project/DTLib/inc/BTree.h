@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-01 01:46:57
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-02 02:08:36
+ * @LastEditTime: 2021-09-03 01:56:23
  */
 
 #ifndef BTREE_H
@@ -22,7 +22,8 @@ namespace DTLib
 enum BTTraversal {
     PreOrder,
     InOrder,
-    PostOrder
+    PostOrder,
+    LevelOrder
 };
 
 template < typename T >
@@ -223,6 +224,148 @@ protected:
         }
     }
 
+    void levelOrderTraversal(BTreeNode<T>* node, LinkQueue<BTreeNode<T>*>& queue)
+    {
+        if ( node != NULL ) {
+            LinkQueue<BTreeNode<T>*> tmp;
+
+            tmp.add(node);
+
+            while ( tmp.length() > 0 ) {
+                BTreeNode<T>* n = tmp.front();
+
+                if ( n->left != NULL ) {
+                    tmp.add(n->left);
+                }
+
+                if ( n->right != NULL ) {
+                    tmp.add(n->right);
+                }
+
+                tmp.remove();
+                queue.add(n);
+            }
+        }
+    }
+
+    BTreeNode<T>* clone(BTreeNode<T>* node) const
+    {
+        BTreeNode<T>* ret = NULL;
+
+        if ( node != NULL ) {
+            ret = BTreeNode<T>::NewNode();
+
+            if ( ret != NULL ) {
+                ret->value = node->value;
+                ret->left = clone(node->left);
+                ret->right = clone(node->right);
+
+                if ( ret->left != NULL ) {
+                    ret->left->parent = ret;
+                }
+
+                if ( ret->right != NULL ) {
+                    ret->right->parent = ret;
+                }
+            } else {
+                THROW_EXCEPTION(NoEnoughMemoryException, "No memory to create tree node");
+            }
+        }
+
+        return ret;
+    }
+
+    bool equal(BTreeNode<T>* lh, BTreeNode<T>* rh) const
+    {
+        if ( lh == rh ) {
+            return true;
+        } else if ( lh != NULL && rh != NULL ) {
+            return (lh->value == rh->value) && equal(lh->left, rh->left) && equal(lh->right, rh->right);
+        } else {
+            return false;
+        }
+    }
+
+    BTreeNode<T>* add(BTreeNode<T>* lh, BTreeNode<T>* rh) const
+    {
+        BTreeNode<T>* ret = NULL;
+
+        if ( (lh != NULL) && (rh != NULL) ) {
+            ret = BTreeNode<T>::NewNode();
+
+            if ( ret != NULL ) {
+                ret->value = lh->value + rh->value;
+                ret->left = add(lh->left, rh->left);
+                ret->right = add(lh->right, rh->right);
+
+                if ( ret->left != NULL ) {
+                    ret->left->parent = ret;
+                }
+
+                if ( ret->right != NULL ) {
+                    ret->right->parent = ret;
+                }
+            } else {
+                THROW_EXCEPTION(NoEnoughMemoryException, "No memory to create btree node");
+            }
+        } else if ( lh == NULL ) {
+            ret = clone(rh);
+        } else {
+            ret = clone(lh);
+        }
+
+        return ret;
+    }
+
+    void traversal(BTTraversal order, LinkQueue<BTreeNode<T>*>& queue)
+    {
+        switch( order ) {
+            case PreOrder:
+                preOrderTraversal(root(), queue);
+                break;
+
+            case InOrder:
+                inOrderTraversal(root(), queue);
+                break;
+            
+            case PostOrder:
+                postOrderTraversal(root(), queue);
+                break;
+
+            case LevelOrder:
+                levelOrderTraversal(root(), queue);
+                break;
+
+            default:
+                THROW_EXCEPTION(InvalidParameterException, "Parameter order is invalid");
+                break;
+        }
+    }
+
+    BTreeNode<T>* connect(LinkQueue<BTreeNode<T>*>& queue)
+    {
+        BTreeNode<T>* ret = NULL;
+
+        if ( queue.length() > 0 ) {
+            ret = queue.front();
+
+            BTreeNode<T>* slider = queue.front();
+            slider->left = NULL;
+            queue.remove();
+
+            while( queue.length() > 0 ) {
+                slider->right = queue.front();
+                queue.front()->left = slider;
+                slider = queue.front();
+                queue.remove();
+            }
+
+            slider->right = NULL;
+        }
+
+        return ret;
+    }
+
 public:
     virtual bool insert(TreeNode<T>* node, BTNodePos pos)
     {
@@ -400,23 +543,7 @@ public:
         DynamicArray<T>* ret = NULL;
         LinkQueue<BTreeNode<T>*> queue;
 
-        switch( order ) {
-            case PreOrder:
-                preOrderTraversal(root(), queue);
-                break;
-
-            case InOrder:
-                inOrderTraversal(root(), queue);
-                break;
-            
-            case PostOrder:
-                postOrderTraversal(root(), queue);
-                break;
-
-            default:
-                THROW_EXCEPTION(InvalidParameterException, "Parameter order is invalid");
-                break;
-        }
+        traversal(order, queue);
 
         ret = new DynamicArray<T>(queue.length());
         if ( ret != NULL ) {
@@ -430,6 +557,57 @@ public:
         return ret;
     }
 
+    BTreeNode<T>* thread(BTTraversal order)
+    {
+        BTreeNode<T>* ret = NULL;
+        LinkQueue<BTreeNode<T>*> queue;
+
+        traversal(order, queue);
+
+        ret = connect(queue);
+
+        this->m_root = NULL;
+        m_queue.clear();
+
+        return ret;
+    }
+
+    SharedPointer< BTree<T> > clone() const
+    {
+        BTree<T>* ret = new BTree<T>();
+
+        if ( ret != NULL ) {
+            ret->m_root = clone(root());
+        } else {
+            THROW_EXCEPTION(NoEnoughMemoryException, "No memory to create new tree");
+        }
+
+        return ret;
+    }
+
+    bool operator == (const BTree<T>& btree) const
+    {
+        return equal(root(), btree.root());
+    }
+
+    bool operator != (const BTree<T>& btree) const
+    {
+        return !(*this == btree);
+    }
+
+    SharedPointer< BTree<T> > add(const BTree<T>& btree) const
+    {
+        BTree<T>* ret = new BTree<T>();
+
+        if ( ret != NULL ) {
+            ret->m_root = add(root(), btree.root());
+        } else {
+            THROW_EXCEPTION(NoEnoughMemoryException, "Ne memory to create new btree");
+        }
+
+        return ret;
+    }
+
     ~BTree()
     {
         clear();
@@ -438,4 +616,4 @@ public:
 
 }
 
-#endif // BTREE_H
+#endif // BTREE_His 2

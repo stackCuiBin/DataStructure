@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-08-02 00:00:21
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-02 02:06:56
+ * @LastEditTime: 2021-09-03 01:57:14
  */
 /*************************************************************************
  ******* File Name: main.cpp
@@ -86,25 +86,53 @@ int main(int argc, const char* argv[])
 	bt.insert(6, n);
 	bt.insert(7, n);
 
-	n = bt.find(6);
-	bt.insert(11, n);
-
-	int a[] = {8, 9, 10, 11, 7};
-
-	// SharedPointer< Tree<int> > sp = bt.remove(3);
+	SharedPointer< BTree<int> > sbt = bt.clone();
 	
+	cout << "original" << endl;
 	for ( bt.begin(); !bt.end(); bt.next() ) {
 		cout << bt.current() << endl;
 	}
 	cout << endl;
 
+	cout << "clone:" << endl;
+	for ( sbt->begin(); !sbt->end(); sbt->next() ) {
+		cout << sbt->current() << endl;
+	}
+	cout << endl;
+
+	cout << "bt == *sbt : " << (bt == *sbt) << endl; 
+
 	cout << "count is " << bt.count() << endl;
 	cout << "height is " << bt.height() << endl;
 	cout << "degree is " << bt.degree() << endl;
 
+	BTree<int> bt1;
+	SharedPointer< BTree<int> > sbt1;
+
+	bt1.insert(0, NULL);
+
+	n = bt1.find(0);
+	bt1.insert(6, n);
+	bt1.insert(2, n);
+
+	n = bt1.find(2);
+	bt1.insert(7, n);
+	bt1.insert(8, n);
+
+	sbt1 = bt.add(bt1);
+
+	n = bt.thread(LevelOrder);
+
+	while ( n != NULL ) {
+		cout << n->value << " ";
+		n = n->right;
+	}
+	cout << endl;
+
 	SharedPointer< Array<int> > sp = NULL;
 
-	sp = bt.traversal(PreOrder);
+	// sp = sbt1->traversal(PreOrder);
+	sp = sbt1->traversal(LevelOrder);
 
 	for( int i = 0; i < sp->length(); i++ )
 	{
