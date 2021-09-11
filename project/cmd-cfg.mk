@@ -4,7 +4,7 @@ ARFLAGS := crs
 
 CC := g++
 LFLAGS := 
-CFLAGS := -O0 -I$(DIR_COMMON_INC) -I$(DIR_INC) -I$(DIR_LIBS_INC)
+CFLAGS := -Wall -I$(DIR_COMMON_INC) -I$(DIR_INC) -I$(DIR_LIBS_INC)
 
 DEBUG := true
 
