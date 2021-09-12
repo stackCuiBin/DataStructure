@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-08-02 00:00:21
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-11 13:17:16
+ * @LastEditTime: 2021-09-13 00:34:15
  */
 
 #include <iostream>
@@ -12,6 +12,38 @@
 
 using namespace std;
 using namespace DTLib;
+
+/* 递归方式实现DFS */
+template < typename V, typename E >
+void DFS(Graph<V, E>& g, int v, Array<bool>& visited)
+{
+    if ( (v >= 0) && (v < g.vCount()) ) {
+        cout << v << endl;
+
+        visited[v] = true;
+
+        SharedPointer< Array<int> > aj = g.getAdjacent(v);
+        for ( int i = 0; i < aj->length(); i++ ) {
+            if ( !visited[(*aj)[i]] ) {
+                DFS(g, (*aj)[i], visited);
+            }
+        }
+    } else {
+        THROW_EXCEPTION(InvalidParameterException, "Input parameter is invalid");
+    }
+}
+
+template < typename V, typename E >
+void DFS(Graph<V, E>& g, int v)
+{
+    DynamicArray<bool> visited(g.vCount());
+
+    for ( int i = 0; i < visited.length(); i++ ) {
+        visited[i] = false;
+    }
+
+    DFS(g, v, visited);
+}
 
 /*
         6
@@ -63,6 +95,15 @@ int main(int argc, const char* argv[])
     cout << "ID(1) : " << g.ID(1) << endl;
     cout << "OD(1) : " << g.OD(1) << endl;
     cout << "TD(1) : " << g.TD(1) << endl;
-	
+
+    // aj = g.BFS(0);
+    aj = g.DFS(0);
+    for ( int i = 0; i < aj->length(); i++ ) {
+        cout << (*aj)[i] << " ";
+    }
+    cout << endl;
+
+	DFS(g, 0);
+    
     return 0;
 }

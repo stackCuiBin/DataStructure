@@ -4,15 +4,13 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 00:13:56
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-11 01:40:14
+ * @LastEditTime: 2021-09-12 23:35:01
  */
 
 #ifndef MATRIXGRAPH_H
 #define MATRIXGRAPH_H
 
 #include "Graph.h"
-#include "Exception.h"
-#include "DynamicArray.h"
 
 namespace DTLib
 {

@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 10:18:03
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-11 13:12:21
+ * @LastEditTime: 2021-09-12 23:35:36
  */
 
 #ifndef LISTGRAPH_H
@@ -12,8 +12,6 @@
 
 #include "Graph.h"
 #include "LinkList.h"
-#include "Exception.h"
-#include "DynamicArray.h"
 
 namespace DTLib
 {

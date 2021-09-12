@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 00:04:56
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-11 12:41:50
+ * @LastEditTime: 2021-09-13 00:09:27
  */
 
 #ifndef GRAPH_H
@@ -13,6 +13,9 @@
 #include "Object.h"
 #include "SharedPointer.h"
 #include "Array.h"
+#include "DynamicArray.h"
+#include "LinkQueue.h"
+#include "LinkStack.h"
 
 namespace DTLib
 {
@@ -51,6 +54,23 @@ struct Edge : public Object
 template < typename V, typename E >
 class Graph : public Object
 {
+protected:
+    template < typename T >
+    DynamicArray<T>* toArray(LinkQueue<T>& queue)
+    {
+        DynamicArray<T>* ret = new DynamicArray<T>(queue.length());
+
+        if ( ret != NULL ) {
+            for ( int i = 0; i < ret->length(); i++, queue.remove() ) {
+                ret->set(i, queue.front());
+            }
+        } else {
+            THROW_EXCEPTION(NoEnoughMemoryException, "No memory to create ret object");
+        }
+
+        return ret;
+    }
+
 public:
     virtual V getVertex(int i) = 0;
     virtual bool getVertex(int i, V& value) = 0;
@@ -71,6 +91,81 @@ public:
         return OD(i) + ID(i);
     }
 
+    SharedPointer< Array<int> > BFS(int i)
+    {
+        DynamicArray<int>* ret = NULL;
+
+        if ( (i >= 0) && (i < vCount()) ) {
+            LinkQueue<int> q;
+            LinkQueue<int> r;
+            DynamicArray<bool> visited(vCount());
+
+            for ( int j = 0; j < visited.length(); j++) {
+                visited[j] = false;
+            }
+
+            q.add(i);
+
+            while ( q.length() > 0 ) {
+                int v = q.front();
+
+                q.remove();
+                if ( !visited[v] ) {
+                    SharedPointer< Array<int> > aj = getAdjacent(v);
+
+                    for ( int j = 0; j < aj->length(); j++ ) {
+                        q.add((*aj)[j]);
+                    }
+
+                    r.add(v);
+                    visited[v] = true;
+                }
+            }
+
+            ret = toArray(r);
+        } else {
+            THROW_EXCEPTION(InvalidParameterException, "Input parameter is invalid");
+        }
+        return ret;
+    }
+
+    SharedPointer< Array<int> > DFS(int i)
+    {
+        DynamicArray<int>* ret = NULL;
+
+        if ( (i >= 0) && (i < vCount()) ) {
+            LinkStack<int> q;
+            LinkQueue<int> r;
+            DynamicArray<bool> visited(vCount());
+
+            for ( int j = 0; j < visited.length(); j++ ) {
+                visited[j] = false;
+            }
+
+            q.push(i);
+            while( q.size() > 0 ) {
+                int v = q.top();
+
+                q.pop();
+                
+                if ( !visited[v] ) {
+                    SharedPointer< Array<int> > aj = getAdjacent(v);
+                    for ( int j = aj->length()-1; j >= 0; j-- ) {
+                        q.push((*aj)[j]);
+                    }
+
+                    r.add(v);
+                    visited[v] = true;
+                }
+            }
+
+            ret = toArray(r);
+        } else {
+            THROW_EXCEPTION(InvalidParameterException, "Input parameter is invalid");
+        }
+
+        return ret;
+    }
 
 };
 
