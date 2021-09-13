@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 00:04:56
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-13 23:23:17
+ * @LastEditTime: 2021-09-14 00:38:29
  */
 
 #ifndef GRAPH_H
@@ -16,6 +16,7 @@
 #include "DynamicArray.h"
 #include "LinkQueue.h"
 #include "LinkStack.h"
+#include "Sort.h"
 
 namespace DTLib
 {
@@ -49,6 +50,17 @@ struct Edge : public Object
     {
         return !(*this == obj);
     }
+
+    bool operator < (const Edge& obj)
+    {
+        return (data < obj.data);
+    }
+
+    bool operator > (const Edge& obj)
+    {
+        return (data > obj.data);
+    }
+
 };
 
 template < typename V, typename E >
@@ -69,6 +81,38 @@ protected:
         }
 
         return ret;
+    }
+
+    SharedPointer< Array< Edge<E> > > getUndirectedEdges()
+    {
+        DynamicArray< Edge<E> >* ret = NULL;
+
+        if ( asUndirected() ) {
+            LinkQueue< Edge<E> > queue;
+
+            for ( int i = 0; i < vCount(); i++ ) {
+                for ( int j = i; j < vCount(); j++ ) {
+                    if ( isAdjacent(i, j) ) {
+                        queue.add(Edge<E>(i, j, getEdge(i,j)));
+                    }
+                }
+            }
+
+            ret = toArray(queue);
+        } else {
+            THROW_EXCEPTION(InvalidOperationException, "This function is for undirected graph only");
+        }
+
+        return ret;
+    }
+
+    int find(Array<int>& p, int v)
+    {
+        while ( p[v] != -1 ) {
+            v = p[v];
+        }
+
+        return v;
     }
 
 public:
@@ -166,6 +210,35 @@ public:
             THROW_EXCEPTION(InvalidOperationException, "No enough edge for prim operation");
         }
         
+        return toArray(ret);
+    }
+
+    SharedPointer< Array< Edge<E> > > kruskal(const bool ISMINCMP = true)
+    {
+        LinkQueue< Edge<E> > ret;
+        SharedPointer< Array< Edge<E> > > edges = getUndirectedEdges();
+        DynamicArray<int> p(vCount());
+
+        for ( int i = 0; i < vCount(); i++ ) {
+            p[i] = -1;
+        }
+
+        Sort::Shell(*edges, ISMINCMP);
+
+        for ( int i = 0; (i < edges->length()) && (ret.length() < (vCount() -1 )); i++ ) {
+            int b = find(p, (*edges)[i].b);
+            int e = find(p, (*edges)[i].e);
+
+            if ( b != e ) {
+                p[e] = b;
+                ret.add((*edges)[i]);
+            }
+        }
+
+        if ( ret.length() != (vCount() -1 ) ) {
+            THROW_EXCEPTION(InvalidOperationException, "No enough edges for kruskal");
+        }
+
         return toArray(ret);
     }
 

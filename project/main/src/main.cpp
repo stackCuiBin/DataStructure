@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-08-02 00:00:21
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-13 23:31:05
+ * @LastEditTime: 2021-09-14 00:30:28
  */
 
 #include <iostream>
@@ -51,7 +51,8 @@ int main(int argc, const char* argv[])
     g.setEdge(2, 3, 1);
     g.setEdge(3, 2, 1);
 
-    SharedPointer< Array< Edge<int> > > aj = g.prim(65535);
+    // SharedPointer< Array< Edge<int> > > aj = g.prim(65535);
+    SharedPointer< Array< Edge<int> > > aj = g.kruskal();
     int ret = 0;
     for ( int i = 0; i < aj->length(); i++ ) {
         cout << (*aj)[i].b << " " << (*aj)[i].e << endl;
