@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 00:04:56
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-13 00:09:27
+ * @LastEditTime: 2021-09-13 23:23:17
  */
 
 #ifndef GRAPH_H
@@ -76,7 +76,8 @@ public:
     virtual bool getVertex(int i, V& value) = 0;
     virtual bool setVertex(int i, const V& value) = 0;
     virtual SharedPointer< Array<int> > getAdjacent(int i) = 0;
-    // virtual bool isAdjacent(int i, int j) = 0;
+    /* 判断i和j是否相邻 */
+    virtual bool isAdjacent(int i, int j) = 0;
     virtual E getEdge(int i, int j) = 0;
     virtual bool getEdge(int i, int j, E& value) = 0;
     virtual bool setEdge(int i, int j, const E& value) = 0;
@@ -89,6 +90,83 @@ public:
     virtual int TD(int i)
     {
         return OD(i) + ID(i);
+    }
+
+    /* 判断是否为无向图 */
+    bool asUndirected()
+    {
+        bool ret = true;
+
+        for ( int i = 0; (i < vCount()) && ret; i++ ) {
+            for ( int j = 0; (j < vCount()) && ret; j++ ) {
+                if ( isAdjacent(i, j) ) {
+                    ret = ret && isAdjacent(j, i) && (getEdge(i, j) == getEdge(j, i));
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    /* 默认查找最小生成树，LIMIT设置最大值 */
+    SharedPointer< Array< Edge<E> > > prim(const E& LIMIT, const bool ISMINCMP = true)
+    {
+        LinkQueue< Edge<E> > ret;
+
+        if ( asUndirected() ) {                     /* 先判断是否可以看做无向图 */
+            DynamicArray<int> adjVex(vCount());     /* cost中权值的对应顶点 */
+            DynamicArray<bool> mark(vCount());      /* 顶点编号是在T or F 集 */
+            DynamicArray<E> cost(vCount());         /* 记录T集合到F集合中顶点的最小权值 */
+            SharedPointer< Array<int> > aj = NULL;
+            bool end = false;
+            int v = 0;
+
+            for ( int i = 0; i < vCount(); i++ ) {
+                adjVex[i] = -1;
+                mark[i] = false;
+                cost[i] = LIMIT;
+            }
+
+            mark[v] = true;
+            aj = getAdjacent(v);
+            for ( int i = 0; i < aj->length(); i++ ) {      /* 将顶点 v 添加到T集后，查找所有的边并保存权值 */
+                cost[(*aj)[i]] = getEdge(v, (*aj)[i]);
+                adjVex[(*aj)[i]] = v;
+            }
+
+            for ( int i = 0; (i < vCount()) && !end; i++ ) {
+                E m = LIMIT;
+                int k = -1;
+
+                for ( int j = 0; j < vCount(); j++ ) {      /* 遍历 T 到 F 集合中所有边的权值最小值 */
+                    if ( !mark[j] && (ISMINCMP ? (cost[j] < m) : (cost[j] > m)) ) {
+                        m = cost[j];
+                        k = j;
+                    }
+                }
+
+                end = (k == -1);
+                if ( !end ) {
+                    ret.add(Edge<E>(adjVex[k], k, getEdge(adjVex[k], k)));
+                    mark[k] = true;
+                    aj = getAdjacent(k);
+                    for ( int j = 0; j < aj->length(); j++ ) {
+                        if ( !mark[(*aj)[j]] && (ISMINCMP ? (getEdge(k, (*aj)[j]) < cost[(*aj)[j]]) : (getEdge(k, (*aj)[j]) > cost[(*aj)[j]])) ) {
+                            cost[(*aj)[j]] = getEdge(k, (*aj)[j]);
+                            adjVex[(*aj)[j]] = k;
+                        }
+                    }
+                }
+            }
+        } else {
+            THROW_EXCEPTION(InvalidOperationException, "Prim operation is for undirected graph only");
+        }
+
+        if ( ret.length() != (vCount()-1) ) {
+            THROW_EXCEPTION(InvalidOperationException, "No enough edge for prim operation");
+        }
+        
+        return toArray(ret);
     }
 
     SharedPointer< Array<int> > BFS(int i)
@@ -147,7 +225,7 @@ public:
                 int v = q.top();
 
                 q.pop();
-                
+
                 if ( !visited[v] ) {
                     SharedPointer< Array<int> > aj = getAdjacent(v);
                     for ( int j = aj->length()-1; j >= 0; j-- ) {

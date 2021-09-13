@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-08-02 00:00:21
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-13 00:34:15
+ * @LastEditTime: 2021-09-13 23:31:05
  */
 
 #include <iostream>
@@ -13,46 +13,14 @@
 using namespace std;
 using namespace DTLib;
 
-/* 递归方式实现DFS */
-template < typename V, typename E >
-void DFS(Graph<V, E>& g, int v, Array<bool>& visited)
-{
-    if ( (v >= 0) && (v < g.vCount()) ) {
-        cout << v << endl;
-
-        visited[v] = true;
-
-        SharedPointer< Array<int> > aj = g.getAdjacent(v);
-        for ( int i = 0; i < aj->length(); i++ ) {
-            if ( !visited[(*aj)[i]] ) {
-                DFS(g, (*aj)[i], visited);
-            }
-        }
-    } else {
-        THROW_EXCEPTION(InvalidParameterException, "Input parameter is invalid");
-    }
-}
-
-template < typename V, typename E >
-void DFS(Graph<V, E>& g, int v)
-{
-    DynamicArray<bool> visited(g.vCount());
-
-    for ( int i = 0; i < visited.length(); i++ ) {
-        visited[i] = false;
-    }
-
-    DFS(g, v, visited);
-}
-
 /*
-        6
-    A ------> D
-    |      / /|\
-   5|   9/    |2
-   \|/|/_     |
-    B ------> C
-        8
+            A
+        1 / | \ 2
+        /   |3  \
+       B --1---- D
+        \   |   /
+        4 \ | / 1
+            C
  */
 
 int main(int argc, const char* argv[])
@@ -64,46 +32,32 @@ int main(int argc, const char* argv[])
     g.addVertex('C');
     g.addVertex('D');
 
-    // g.removeVertex();
+    /* 双向设置相同的权值，视其为无向图 */
+    g.setEdge(0, 1, 1);
+    g.setEdge(1, 0, 1);
 
-    for ( int i = 0; i < g.vCount(); i++ ) {
-        cout << i << " : " << g.getVertex(i) << endl;
-    }
+    g.setEdge(0, 2, 3);
+    g.setEdge(2, 0, 3);
 
-    g.setEdge(0, 1, 5);
-    g.setEdge(0, 3, 6);
-    g.setEdge(1, 2, 8);
-    g.setEdge(2, 3, 2);
-    g.setEdge(3, 1, 9);
+    g.setEdge(0, 3, 2);
+    g.setEdge(3, 0, 2);
 
-    cout << "W(0, 1) : " << g.getEdge(0, 1) << endl;
-    cout << "W(0, 3) : " << g.getEdge(0, 3) << endl;
-    cout << "W(1, 2) : " << g.getEdge(1, 2) << endl;
-    cout << "W(2, 3) : " << g.getEdge(2, 3) << endl;
-    cout << "W(3, 1) : " << g.getEdge(3, 1) << endl;
+    g.setEdge(1, 2, 4);
+    g.setEdge(2, 1, 4);
 
-    cout << "eCount : " << g.eCount() << endl;
-    // g.removeEdge(3, 1);
-    // cout << "eCount : " << g.eCount() << endl;
+    g.setEdge(1, 3, 1);
+    g.setEdge(3, 1, 1);
 
-    SharedPointer< Array<int> > aj = g.getAdjacent(0);
+    g.setEdge(2, 3, 1);
+    g.setEdge(3, 2, 1);
+
+    SharedPointer< Array< Edge<int> > > aj = g.prim(65535);
+    int ret = 0;
     for ( int i = 0; i < aj->length(); i++ ) {
-        cout << (*aj)[i] << " ";
+        cout << (*aj)[i].b << " " << (*aj)[i].e << endl;
+        ret += (*aj)[i].data;
     }
-    cout << endl;
+    cout << "ret " << ret << endl;
 
-    cout << "ID(1) : " << g.ID(1) << endl;
-    cout << "OD(1) : " << g.OD(1) << endl;
-    cout << "TD(1) : " << g.TD(1) << endl;
-
-    // aj = g.BFS(0);
-    aj = g.DFS(0);
-    for ( int i = 0; i < aj->length(); i++ ) {
-        cout << (*aj)[i] << " ";
-    }
-    cout << endl;
-
-	DFS(g, 0);
-    
     return 0;
 }

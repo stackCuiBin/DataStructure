@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 10:18:03
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-12 23:35:36
+ * @LastEditTime: 2021-09-13 01:41:34
  */
 
 #ifndef LISTGRAPH_H
@@ -163,6 +163,11 @@ public:
         }
 
         return ret;
+    }
+
+    bool isAdjacent(int i, int j)
+    {
+        return ( (i >= 0) && (i < vCount()) && (j >= 0) && (j < vCount()) && (m_list.get(i)->edge.find(Edge<E>(i,j)) >= 0) );
     }
 
     E getEdge(int i, int j)

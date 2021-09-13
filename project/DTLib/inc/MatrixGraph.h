@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 00:13:56
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-12 23:35:01
+ * @LastEditTime: 2021-09-13 01:42:53
  */
 
 #ifndef MATRIXGRAPH_H
@@ -118,7 +118,9 @@ public:
     }
 
     bool isAdjacent(int i, int j)
-    {}
+    {
+        return ( (i >= 0) && (i < vCount()) && (j >= 0) && (j < vCount()) && (m_edges[i][j] != NULL) )
+    }
 
     E getEdge(int i, int j)
     {
