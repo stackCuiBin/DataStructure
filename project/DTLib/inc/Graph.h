@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-09-11 00:04:56
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-14 00:38:29
+ * @LastEditTime: 2021-09-16 01:57:08
  */
 
 #ifndef GRAPH_H
@@ -316,6 +316,72 @@ public:
         }
 
         return ret;
+    }
+
+    SharedPointer< Array<int> > dijkstra(int i, int j, const E& LIMIT)
+    {
+        LinkQueue<int> ret;
+
+        if ( (i >= 0) && (i < vCount()) && (j >= 0) && (j < vCount()) ) {
+            DynamicArray<E> dist(vCount());
+            DynamicArray<bool> mark(vCount());
+            DynamicArray<int> path(vCount());
+
+            for ( int k = 0; k < vCount(); k++ ) {
+                mark[k] = false;
+                path[k] = -1;
+                /* 和起始顶点相邻的：设置为权值 */
+                dist[k] = isAdjacent(i, k) ? (path[k] = i, getEdge(i, k)) : LIMIT;
+            }
+
+            mark[i] = true;
+            for ( int k = 0; k < vCount(); k++ ) {
+                E m = LIMIT;
+                int u = -1;
+
+                /* 查找未被标记的最小权值的顶点 u */
+                for ( int w = 0; w < vCount(); w++ ) {
+                    if ( !mark[w] && (dist[w] < m) ) {
+                        m = dist[w];
+                        u = w;
+                    }
+                }
+
+                /* 未查找到 u， 遍历结束 */
+                if ( u == -1 ) {
+                    break;
+                }
+
+                mark[u] = true;
+                /* 目前以查找到顶点到u的最短路径，遍历u的未被标记的邻接顶点，更新它们的最小路径及前驱顶点 */
+                for ( int w = 0; w < vCount(); w++ ) {
+                    if ( !mark[w] && isAdjacent(u, w) && ((dist[u] + getEdge(u, w)) < dist[w]) ) {
+                        dist[w] = dist[u] + getEdge(u, w);
+                        path[w] = u;
+                    }
+                }
+            }
+
+            LinkStack<int> s;
+
+            s.push(j);
+            for ( int k = path[j]; k != -1; k = path[k] ) {
+                s.push(k);
+            }
+
+            while ( s.size() > 0 ) {
+                ret.add(s.top());
+                s.pop();
+            }
+        } else {
+            THROW_EXCEPTION(InvalidParameterException, "Input parameter is invalid");
+        }
+
+        if ( ret.length() < 2 ) {
+            THROW_EXCEPTION(ArithmeticException, "There is no path from i to j");
+        }
+
+        return toArray(ret);
     }
 
 };

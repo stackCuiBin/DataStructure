@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2019-08-02 00:00:21
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-09-14 00:30:28
+ * @LastEditTime: 2021-09-16 01:47:44
  */
 
 #include <iostream>
@@ -15,12 +15,12 @@ using namespace DTLib;
 
 /*
             A
-        1 / | \ 2
-        /   |3  \
-       B --1---- D
-        \   |   /
-        4 \ | / 1
-            C
+        1 /   \ 3
+        /       \
+       B --1---- C
+        \       /
+        4 \   / 1
+            D
  */
 
 int main(int argc, const char* argv[])
@@ -32,33 +32,17 @@ int main(int argc, const char* argv[])
     g.addVertex('C');
     g.addVertex('D');
 
-    /* 双向设置相同的权值，视其为无向图 */
     g.setEdge(0, 1, 1);
-    g.setEdge(1, 0, 1);
-
     g.setEdge(0, 2, 3);
-    g.setEdge(2, 0, 3);
-
-    g.setEdge(0, 3, 2);
-    g.setEdge(3, 0, 2);
-
-    g.setEdge(1, 2, 4);
-    g.setEdge(2, 1, 4);
-
-    g.setEdge(1, 3, 1);
-    g.setEdge(3, 1, 1);
-
+    g.setEdge(1, 2, 1);
+    g.setEdge(1, 3, 4);
     g.setEdge(2, 3, 1);
-    g.setEdge(3, 2, 1);
 
-    // SharedPointer< Array< Edge<int> > > aj = g.prim(65535);
-    SharedPointer< Array< Edge<int> > > aj = g.kruskal();
-    int ret = 0;
+    SharedPointer< Array<int> > aj = g.dijkstra(0, 3, 65535);
     for ( int i = 0; i < aj->length(); i++ ) {
-        cout << (*aj)[i].b << " " << (*aj)[i].e << endl;
-        ret += (*aj)[i].data;
+        cout << (*aj)[i] << " ";
     }
-    cout << "ret " << ret << endl;
-
+    cout << endl;
+    
     return 0;
 }
