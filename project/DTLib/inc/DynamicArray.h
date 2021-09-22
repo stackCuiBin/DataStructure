@@ -4,7 +4,7 @@
  * @Author: Cuibb
  * @Date: 2021-07-05 22:49:31
  * @LastEditors: Cuibb
- * @LastEditTime: 2021-07-06 00:03:48
+ * @LastEditTime: 2021-09-22 17:15:59
  */
 
 #ifndef DYNAMICARRAY_h
@@ -73,7 +73,7 @@ protected:
     }
 
 public:
-    DynamicArray(int length)
+    DynamicArray(int length = 0)
     {
         init(new T[length], length);
         // this->m_array = new T[length];
